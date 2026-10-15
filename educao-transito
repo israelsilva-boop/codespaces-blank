@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-TRAFFIC: The Idol Driving School</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts: Poppins & Orbitron -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        kpink: '#FF007F',
+                        kcyan: '#00F0FF',
+                        kpurple: '#8A2BE2',
+                        kyellow: '#FFE600',
+                        kdark: '#0D0A1A',
+                        kcard: '#18132B'
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        poppins: ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0D0A1A;
+            color: #FFFFFF;
+            overflow-x: hidden;
+        }
+
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .neon-border-pink {
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.6), inset 0 0 10px rgba(255, 0, 127, 0.3);
+            border: 2px solid #FF007F;
+        }
+
+        .neon-border-cyan {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.6), inset 0 0 10px rgba(0, 240, 255, 0.3);
+            border: 2px solid #00F0FF;
+        }
+
+        .neon-border-purple {
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.6);
+            border: 2px solid #8A2BE2;
+        }
+
+        .neon-text-pink {
+            text-shadow: 0 0 8px rgba(255, 0, 127, 0.8), 0 0 20px rgba(255, 0, 127, 0.5);
+        }
+
+        .neon-text-cyan {
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.8), 0 0 20px rgba(0, 240, 255, 0.5);
+        }
+
+        .glow-button-pink {
+            background: linear-gradient(135deg, #FF007F, #7B00FF);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .glow-button-pink:hover {
+            box-shadow: 0 0 25px rgba(255, 0, 127, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .glow-button-cyan {
+            background: linear-gradient(135deg, #00F0FF, #0072FF);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .glow-button-cyan:hover {
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .glass-panel {
+            background: rgba(24, 19, 43, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .kpop-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .kpop-card:hover {
+            transform: translateY(-5deg);
+        }
+
+        /* Holographic Shimmer Effect */
+        .holo-bg {
+            background: linear-gradient(135deg, rgba(255,0,127,0.15) 0%, rgba(0,240,255,0.15) 50%, rgba(138,43,226,0.15) 100%);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0D0A1A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF007F;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00F0FF;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-kpink selection:text-white">
+
+    <!-- TOP NAVIGATION -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-kpink/30 px-4 lg:px-8 py-3">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showScreen('home-screen')">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-kpink to-kcyan flex items-center justify-center font-orbitron font-extrabold text-white text-xl shadow-lg">
+                    ⚡
+                </div>
+                <div>
+                    <h1 class="font-orbitron text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-kpink via-kcyan to-kyellow">
+                        K-TRAFFIC
+                    </h1>
+                    <p class="text-xs text-gray-400 -mt-1 font-semibold tracking-widest">THE IDOL DRIVING SCHOOL</p>
+                </div>
+            </div>
+
+            <!-- Header Quick Stats / Actions -->
+            <div class="flex items-center gap-3">
+                <button onclick="showScreen('study-screen')" class="hidden sm:flex items-center gap-2 text-xs md:text-sm font-semibold px-3 py-1.5 rounded-full border border-kcyan/40 text-kcyan hover:bg-kcyan/10 transition">
+                    <i class="fa-solid fa-book-open"></i> Guia Idol
+                </button>
+                <button onclick="confirmResetQuiz()" class="text-xs md:text-sm font-semibold px-3 py-1.5 rounded-full border border-kpink/40 text-kpink hover:bg-kpink/10 transition">
+                    <i class="fa-solid fa-rotate-right"></i> Reiniciar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 md:py-10">
+
+        <!-- ================= TELA 1: HOME SCREEN ================= -->
+        <section id="home-screen" class="space-y-10">
+            <!-- Hero Banner -->
+            <div class="relative rounded-3xl p-6 md:p-12 overflow-hidden border border-kpink/30 holo-bg text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl">
+                <!-- Glowing background circles -->
+                <div class="absolute -top-10 -left-10 w-40 h-40 bg-kpink/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-kcyan/20 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="max-w-2xl z-10 space-y-4">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-kpink/20 border border-kpink/50 text-kpink font-semibold text-xs uppercase tracking-wider">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Preparatório 2º Ano - CNH Ready
+                    </div>
+                    <h2 class="font-orbitron text-3xl md:text-5xl font-black leading-tight">
+                        Faça seu <span class="text-transparent bg-clip-text bg-gradient-to-r from-kpink via-purple-400 to-kcyan neon-text-pink">DEBUT</span> com Segurança no Trânsito!
+                    </h2>
+                    <p class="text-gray-300 text-sm md:text-base leading-relaxed">
+                        Aprenda Direção Defensiva, Legislação, Sinalização e Saúde Viária no ritmo do K-Pop. Alcance o <strong class="text-kyellow">Rank All-Kill</strong> e conquiste sua CNH de Ouro!
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-2 justify-center md:justify-start">
+                        <button onclick="startQuiz()" class="glow-button-pink text-white font-orbitron font-bold px-8 py-4 rounded-xl text-base flex items-center gap-3">
+                            <i class="fa-solid fa-play text-lg"></i> Iniciar Quiz (50 Desafios)
+                        </button>
+                        <button onclick="showScreen('study-screen')" class="glow-button-cyan text-slate-900 font-orbitron font-bold px-6 py-4 rounded-xl text-base flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb text-lg"></i> Estudar Guia
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mascot Card (Chibi Mascot) -->
+                <div class="relative z-10 w-full max-w-xs">
+                    <div class="glass-panel p-5 rounded-2xl border-2 border-kcyan/50 text-center space-y-3 shadow-xl">
+                        <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-tr from-kpink via-kpurple to-kcyan p-1 shadow-lg">
+                            <div class="w-full h-full bg-kdark rounded-full flex items-center justify-center text-4xl">
+                                🎤🚘
+                            </div>
+                        </div>
+                        <div class="inline-block bg-kcyan text-slate-900 font-bold text-xs px-2 py-0.5 rounded">MASCOTE IDOL</div>
+                        <h3 class="font-orbitron font-extrabold text-lg text-kcyan">MIN-HO LEADER</h3>
+                        <p class="text-xs text-gray-300 italic">"Dirigir com atenção é o verdadeiro show! Pronto para dominar o palco do trânsito?"</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modules Quick Overview -->
+            <div class="space-y-4">
+                <h3 class="font-orbitron text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-kcyan to-kpink flex items-center gap-2">
+                    <i class="fa-solid fa-cubes"></i> Módulos do Conhecimento
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Card 1 -->
+                    <div onclick="openStudyTab('defensiva')" class="glass-panel p-5 rounded-2xl border border-kpink/30 hover:border-kpink cursor-pointer kpop-card flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="w-12 h-12 rounded-xl bg-kpink/20 text-kpink flex items-center justify-center text-2xl font-bold">🛡️</div>
+                            <h4 class="font-orbitron font-bold text-white text-base">Direção Defensiva</h4>
+                            <p class="text-xs text-gray-400">Ver, pensar e agir. Previna acidentes antes que aconteçam.</p>
+                        </div>
+                        <span class="text-xs text-kpink font-semibold mt-4 block">13 Questões no Quiz →</span>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div onclick="openStudyTab('saude')" class="glass-panel p-5 rounded-2xl border border-kcyan/30 hover:border-kcyan cursor-pointer kpop-card flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="w-12 h-12 rounded-xl bg-kcyan/20 text-kcyan flex items-center justify-center text-2xl font-bold">🧠</div>
+                            <h4 class="font-orbitron font-bold text-white text-base">Saúde e Psicológico</h4>
+                            <p class="text-xs text-gray-400">Álcool, sono, estresse e empatia no comando do veículo.</p>
+                        </div>
+                        <span class="text-xs text-kcyan font-semibold mt-4 block">12 Questões no Quiz →</span>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div onclick="openStudyTab('sinalizacao')" class="glass-panel p-5 rounded-2xl border border-kyellow/30 hover:border-kyellow cursor-pointer kpop-card flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="w-12 h-12 rounded-xl bg-kyellow/20 text-kyellow flex items-center justify-center text-2xl font-bold">🛑</div>
+                            <h4 class="font-orbitron font-bold text-white text-base">Sinalização</h4>
+                            <p class="text-xs text-gray-400">Placas de Regulamentação, Advertência e Indicação.</p>
+                        </div>
+                        <span class="text-xs text-kyellow font-semibold mt-4 block">12 Questões no Quiz →</span>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div onclick="openStudyTab('legislacao')" class="glass-panel p-5 rounded-2xl border border-purple-400/30 hover:border-purple-400 cursor-pointer kpop-card flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-2xl font-bold">⚖️</div>
+                            <h4 class="font-orbitron font-bold text-white text-base">Legislação (CTB)</h4>
+                            <p class="text-xs text-gray-400">Infrações, regras de circulação e direitos dos pedestres.</p>
+                        </div>
+                        <span class="text-xs text-purple-400 font-semibold mt-4 block">13 Questões no Quiz →</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= TELA 2: GUIA DE ESTUDO (STUDY SCREEN) ================= -->
+        <section id="study-screen" class="hidden space-y-6">
+            <div class="flex flex-wrap justify-between items-center gap-4">
+                <div>
+                    <h2 class="font-orbitron text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-kcyan to-kpink">
+                        📖 Guia de Estudos do Idol
+                    </h2>
+                    <p class="text-xs md:text-sm text-gray-300">Revise os tópicos pedagógicos fundamentais antes de encarar os testes!</p>
+                </div>
+                <button onclick="showScreen('home-screen')" class="text-xs px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold transition">
+                    ← Voltar ao Início
+                </button>
+            </div>
+
+            <!-- Tab Buttons -->
+            <div class="flex flex-wrap gap-2 border-b border-gray-700 pb-2">
+                <button id="tab-defensiva" onclick="switchStudyTab('defensiva')" class="px-4 py-2 rounded-lg text-xs md:text-sm font-orbitron font-bold bg-kpink text-white transition">
+                    🛡️ Direção Defensiva
+                </button>
+                <button id="tab-saude" onclick="switchStudyTab('saude')" class="px-4 py-2 rounded-lg text-xs md:text-sm font-orbitron font-bold bg-kcard text-gray-400 hover:text-white transition">
+                    🧠 Saúde e Foco
+                </button>
+                <button id="tab-sinalizacao" onclick="switchStudyTab('sinalizacao')" class="px-4 py-2 rounded-lg text-xs md:text-sm font-orbitron font-bold bg-kcard text-gray-400 hover:text-white transition">
+                    🛑 Sinalização
+                </button>
+                <button id="tab-legislacao" onclick="switchStudyTab('legislacao')" class="px-4 py-2 rounded-lg text-xs md:text-sm font-orbitron font-bold bg-kcard text-gray-400 hover:text-white transition">
+                    ⚖️ Legislação (CTB)
+                </button>
+            </div>
+
+            <!-- Tab Content Area -->
+            <div id="study-content" class="glass-panel p-6 md:p-8 rounded-2xl border border-gray-700 space-y-6">
+                <!-- Content dynamically populated via JavaScript -->
+            </div>
+
+            <div class="flex justify-center pt-4">
+                <button onclick="startQuiz()" class="glow-button-pink text-white font-orbitron font-bold px-8 py-3 rounded-xl text-sm">
+                    Pronto para o Teste! Iniciar Quiz (50 Questões) →
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ================= TELA 3: QUIZ INTERATIVO ================= -->
+        <section id="quiz-screen" class="hidden space-y-6">
+            
+            <!-- Quiz Header & Progress Bar -->
+            <div class="glass-panel p-4 md:p-6 rounded-2xl border border-kpink/30 space-y-3">
+                <div class="flex flex-wrap justify-between items-center gap-2">
+                    <span id="quiz-category-badge" class="px-3 py-1 rounded-full text-xs font-orbitron font-bold bg-kpink/20 text-kpink border border-kpink/40">
+                        DIREÇÃO DEFENSIVA
+                    </span>
+                    <span id="quiz-counter" class="font-orbitron font-extrabold text-sm md:text-base text-kcyan">
+                        Questão 1 de 50
+                    </span>
+                </div>
+
+                <!-- Progress Bar Container -->
+                <div class="w-full bg-slate-900 h-3 rounded-full overflow-hidden p-0.5 border border-gray-800">
+                    <div id="quiz-progress-bar" class="bg-gradient-to-r from-kpink via-purple-500 to-kcyan h-full rounded-full transition-all duration-300" style="width: 2%;"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="glass-panel p-6 md:p-8 rounded-2xl border border-kcyan/30 space-y-6 relative overflow-hidden">
+                <h3 id="question-text" class="font-orbitron text-lg md:text-2xl font-bold leading-relaxed text-white">
+                    Carregando pergunta...
+                </h3>
+
+                <!-- Options List -->
+                <div id="options-container" class="space-y-3">
+                    <!-- Options injected by JS -->
+                </div>
+
+                <!-- Pedagogical Feedback Container (Appears after answer) -->
+                <div id="feedback-box" class="hidden p-4 rounded-xl border space-y-2 animate-fade-in">
+                    <div class="flex items-center gap-2 font-orbitron font-bold text-sm" id="feedback-title">
+                        <!-- Icon and Title -->
+                    </div>
+                    <p id="feedback-text" class="text-xs md:text-sm text-gray-200 leading-relaxed"></p>
+                </div>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="flex justify-between items-center gap-4">
+                <button id="btn-prev" onclick="prevQuestion()" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-gray-300 font-orbitron font-bold text-xs md:text-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-chevron-left"></i> Anterior
+                </button>
+
+                <button id="btn-next" onclick="nextQuestion()" disabled class="px-6 py-3 rounded-xl bg-gray-700 opacity-50 cursor-not-allowed text-white font-orbitron font-bold text-xs md:text-sm transition flex items-center gap-2">
+                    Próxima <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ================= TELA 4: RESULTADO FINAL E AVALIAÇÃO ================= -->
+        <section id="results-screen" class="hidden space-y-8">
+            <div class="text-center space-y-3">
+                <h2 class="font-orbitron text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-kpink via-kcyan to-kyellow neon-text-pink">
+                    DEBUT AVALIADO!
+                </h2>
+                <p class="text-sm md:text-base text-gray-300">Confira seu desempenho final no exame de habilitação K-Traffic!</p>
+            </div>
+
+            <!-- Rank Card Banner -->
+            <div id="rank-card" class="glass-panel p-8 rounded-3xl border-2 border-kpink text-center space-y-4 max-w-2xl mx-auto holo-bg shadow-2xl relative overflow-hidden">
+                <div id="rank-badge-icon" class="text-6xl my-2">🏆</div>
+                <div class="space-y-1">
+                    <span class="text-xs font-orbitron uppercase text-gray-400 tracking-widest">Sua Classificação Idol</span>
+                    <h3 id="rank-title" class="font-orbitron text-2xl md:text-3xl font-black text-kyellow">
+                        K-Pop Traffic Superstar
+                    </h3>
+                </div>
+
+                <!-- Score Big Display -->
+                <div class="py-4 border-y border-white/10 flex justify-center items-baseline gap-2">
+                    <span id="final-score" class="font-orbitron text-5xl md:text-6xl font-black text-kcyan">45</span>
+                    <span class="text-gray-400 font-orbitron text-xl">/ 50 ACERTOS</span>
+                    <span id="final-percentage" class="text-kpink font-bold text-sm ml-3 font-orbitron">(90%)</span>
+                </div>
+
+                <p id="rank-description" class="text-xs md:text-sm text-gray-200 leading-relaxed max-w-md mx-auto">
+                    Você deu um All-Kill completo! Sua pilotagem é tão perfeita quanto uma coreografia de K-Pop. CNH de Ouro Garantida!
+                </p>
+            </div>
+
+            <!-- Stats breakdown by Category -->
+            <div class="max-w-2xl mx-auto space-y-3">
+                <h4 class="font-orbitron font-bold text-sm text-gray-300 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-kcyan"></i> Desempenho por Categoria
+                </h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="category-stats-container">
+                    <!-- Dynamic stats JS -->
+                </div>
+            </div>
+
+            <!-- Actions buttons -->
+            <div class="flex flex-wrap justify-center gap-4 pt-4">
+                <button onclick="startQuiz()" class="glow-button-pink text-white font-orbitron font-bold px-8 py-3.5 rounded-xl text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> Refazer Quiz Completo
+                </button>
+                <button onclick="showScreen('home-screen')" class="px-6 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-gray-200 font-orbitron font-bold text-sm transition">
+                    Página Inicial
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="glass-panel border-t border-gray-800 py-6 px-4 text-center text-xs text-gray-500 mt-10">
+        <div class="max-w-7xl mx-auto space-y-2">
+            <p class="font-orbitron tracking-wider text-gray-400">K-TRAFFIC: THE IDOL DRIVING SCHOOL &copy; 2026</p>
+            <p>Material Pedagógico Interativo de Educação no Trânsito para o 2º Ano do Ensino Médio.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // =========================================================================
+        // BANCO DE DADOS COMPLETO - 50 QUESTÕES DIVIDIDAS NAS 4 CATEGORIAS
+        // =========================================================================
+        const rawQuestionBank = [
+            // DIREÇÃO DEFENSIVA (13 Questões)
+            {
+                category: "Direção Defensiva",
+                question: "O que caracteriza fundamentalmente o conceito de Direção Defensiva no trânsito?",
+                options: [
+                    "Dirigir com atenção e antecipar situações de risco para evitar acidentes, independentemente dos erros dos outros.",
+                    "Dirigir sempre na velocidade mínima permitida pela via em qualquer horário.",
+                    "Usar buzina de forma contínua em cruzamentos para alertar os demais condutores.",
+                    "Dar prioridade sempre aos veículos de maior porte em todas as circunstâncias."
+                ],
+                correctIndex: 0,
+                explanation: "A Direção Defensiva é o conjunto de medidas preventivas para evitar acidentes mesmo diante de imperícia alheia ou condições adversas."
+            },
+            {
+                category: "Direção Defensiva",
+                question: "Qual deve ser a atitude correta do condutor ao enfrentar uma situação de aquaplanagem na pista?",
+                options: [
+                    "Pisar no freio bruscamente e girar o volante com força para o lado oposto.",
+                    "Retirar suavemente o pé do acelerador, segurar firme o volante e não frear bruscamente.",
+                    "Acelerar para recuperar a aderência rápida dos pneus com o asfalto.",
+                    "Puxar o freio de mão imediatamente para travar as rodas traseiras."
+                ],
+                correctIndex: 1,
+                explanation: "Na aquaplanagem (perda de contato com o solo devido ao espelho d'água), deve-se tirar o pé do acelerador e manter o volante firme sem frear bruscamente."
+            },
+            {
+                category: "Direção Defensiva",
+                question: "Qual é a recomendação de segurança para a 'distância de seguimento' (distância em relação ao veículo da frente)?",
+                options: [
+                    "Respeitar a regra dos dois segundos em condições normais de pista e tempo.",
+                    "Manter a distância exata de um comprimento de carro para economizar espaço.",
+                    "Colar no veículo da frente para forçá-lo a andar mais rápido.",
+                    "Manter distância apenas se o veículo da frente for um caminhão pesado."
+                ],
+                correctIndex: 0,
+                explanation: "A regra dos dois segundos (contando um ponto fixo após o carro da frente passar) garante tempo e espaço para reação segura."
+            },
+            {
+                category: "Direção Defensiva",
+                question: "Quais são os três elementos básicos da prevenção de acidentes na Direção Defensiva?",
+                options: [
+                    "Ver, Pensar e Agir.",
+                    "Acelerar, Buzinar e Frear.",
+                    "Parar, Olhar e Esperar.",
+                    "Velocidade, Potência e Manobra."
+                ],
+                correctIndex: 0,
+                explanation: "A tríade fundamental da prevenção defensiva é: Ver a situação, Pensar na solução e Agir a tempo."
+            },
+            {
+                category: "Direção Defensiva",
+                question: "Em caso de neblina ou cerração densa durante a viagem, qual procedimento defensivo deve ser adotado?",
+                options: [
+                    "Ligar o farol alto e aumentar a velocidade para sair rápido da neblina.",
+                    "Acender as luzes de posição e o farol baixo, reduzindo a velocidade e aumentando a distância.",
+                    "Ligar o pisca-alerta com o veículo em movimento rápido pela faixa da esquerda.",
+                    "Parar o veículo no meio da pista e aguardar a neblina passar."
+                ],
+                correctIndex: 1,
+                explanation: "Sob neblina, use farol baixo (o farol alto reflete na neblina e cega a visão), reduza a velocidade e mantenha distância."
+            },
+            {
+                category: "Direção Defensiva",
+                question: "O que é considerado uma 'condição adversa' relacionada à luz no trânsito?",
+                options: [
+                    "O ofuscamento causado pelo farol alto de outro veículo ou pela incidência direta do sol.",
+                    "A iluminação pública adequada em vias urbanas durante a noite.",
+                    "Uso de películas insulfilm transparentes dentro do limite legal.",
+                    "Dirigir durante um dia nublado sem chuva."
+                ],
+                correctIndex: 0,
+                explanation: "Condições adversas de luz incluem o excesso de iluminação (ofuscamento) ou a falta dela (penumbra/escuridão)."
+            },
+            {
+                category: "Direção Defensiva",
+                question: "Como o condutor deve proceder antes de realizar uma ultrapassagem segura?",
+                options: [
+                    "Ultrapassar em qualquer trecho desde que não venha ninguém no sentido oposto.",
+                    "Certificar-se de que a sinalização permite, sinalizar com antecedência e conferir os pontos cegos nos retrovisores.",
+                    "Buzinar continuamente e colar na traseira do veículo a ser ultrapassado.",
+                    "Aumentar a velocidade e ultrapassar pela direita em vias de pista simples."
+                ],
+                correctIndex: 1,
+                explanation: "Ultrapassagens exigem permissão da via (linha pontilhada), visibilidade, sinalização prévia (seta) e checagem de retrovisores/pontos cegos."
+            },
+            {
+                category: "Direção Defensiva",
+                question: "O ponto cego nos retrovisores é uma área em que o motorista não enxerga outros veículos. Como mitigar esse risco?",
+                options: [
+                    "Ajustando corretamente os espelhos e movimentando levemente a cabeça antes de mudar de faixa.",
+                    "Removendo todos os espelhos retrovisores externos do veículo.",
+                    "Usar o espelho interno voltado para o teto do carro.",
+                    "Confiar apenas no som do motor dos veículos ao redor."
+                ],
+                correctIndex: 0,
+                explanation: "O ajuste correto dos espelhos retrovisores reduz os pontos cegos e a movimentação rápida da cabeça confirma a manobra em segurança."
+            },
+            {
+                category: "Direção Defensiva",
+                question: "O que fazer ao perceber que o veículo que vem atrás está colado na sua traseira?",
+                options: [
+                    "Frear bruscamente para dar uma lição no motorista de trás.",
+                    "Aumentar a velocidade além do limite para se afastar.",
+                    "Facilitar a ultrapassagem dele, reduzindo suavemente a velocidade e mantendo a direita.",
+                    "Ligar o pisca-alerta e parar imediatamente na pista."
+                ],
+                correctIndex: 2,
+                explanation: "Diante de um condutor 'colado', a atitude defensiva é facilitar sua ultrapassagem para afastar o perigo."
+            },
+            {
+                category: "Direção Defensiva",
+                question: "Em pista molhada, a distância de frenagem do veículo aumenta significativamente. Qual deve ser a conduta?",
+                options: [
+                    "Aumentar a distância do veículo da frente e reduzir a velocidade.",
+                    "Manter a mesma velocidade de pista seca, confiando no sistema ABS.",
+                    "Calibrar os pneus com pressão acima do recomendado para cortar a água.",
+                    "Usar frenagens bruscas para testar o atrito com a pista."
+                ],
+                correctIndex: 0,
+                explanation: "Com a pista molhada, a aderência diminui; por isso, dobrar a distância de segurança e reduzir a velocidade é essencial."
+            },
+            {
+                category: "Direção Defensiva",
+                question: "Ao aproximar-se de um cruzamento não sinalizado em área urbana, o condutor defensivo deve:",
+                options: [
+                    "Acelerar para passar antes dos outros veículos.",
+                    "Reduzir a velocidade e dar preferência ao veículo que se aproxima pela direita.",
+                    "Apenas buzinar e manter a velocidade habitual.",
+                    "Parar apenas se houver pedestre atravessando fora da faixa."
+                ],
+                correctIndex: 1,
+                explanation: "Em cruzamentos não sinalizados, a regra geral de trânsito é que a preferência de passagem é de quem vem pela direita."
+            },
+            {
+                category: "Direção Defensiva",
+                question: "O uso do cinto de segurança por todos os ocupantes do veículo é uma medida de segurança que visa:",
+                options: [
+                    "Evitar multas e reduzir o impacto dos passageiros contra a estrutura do veículo em colisões.",
+                    "Melhorar a postura do motorista sem impacto na segurança em acidentes.",
+                    "Substituir a necessidade do air-bag em veículos novos.",
+                    "Fixar as bagagens no banco traseiro."
+                ],
+                correctIndex: 0,
+                explanation: "O cinto de segurança retém os ocupantes, impedindo que sejam projetados contra o painel, para-brisa ou para fora do veículo."
+            },
+            {
+                category: "Direção Defensiva",
+                question: "Qual o risco de trafegar com pneus 'carecas' (com profundidade dos sulcos abaixo de 1,6 mm)?",
+                options: [
+                    "Maior facilidade de estercionamento em curvas acentuadas.",
+                    "Risco elevado de derrapagem, estouro do pneu e perda de aderência em pistas molhadas.",
+                    "Aumento do consumo de combustível sem afetar a frenagem.",
+                    "Melhoria na absorção dos impactos do piso."
+                ],
+                correctIndex: 1,
+                explanation: "Os sulcos dos pneus escoam a água e geram atrito; pneus desgastados (abaixo de 1,6 mm) causam derrapagens e aquaplanagem."
+            },
+
+            // SAÚDE E PSICOLÓGICO NO TRÂNSITO (12 Questões)
+            {
+                category: "Saúde no Trânsito",
+                question: "Como o consumo de bebidas alcoólicas afeta o condutor de um veículo automotor?",
+                options: [
+                    "Diminui o tempo de reação, melhora a visão noturna e aumenta a atenção.",
+                    "Aumenta o tempo de reação, reduz a coordenação motora e compromete a capacidade de julgamento.",
+                    "Não produz efeito se for consumido acompanhado de comida pesada.",
+                    "Apenas afeta condutores idosos ou inexperientes."
+                ],
+                correctIndex: 1,
+                explanation: "O álcool afeta o sistema nervoso central, reduz a capacidade de discernimento e aumenta o tempo de reação ao perigo."
+            },
+            {
+                category: "Saúde no Trânsito",
+                question: "Segundo a Lei Seca no Brasil, qual é o limite de dosagem alcoólica permitido ao dirigir?",
+                options: [
+                    "Tolerância zero para qualquer quantidade de álcool no organismo do condutor.",
+                    "Permitido até 2 copos de cerveja ou 1 taça de vinho.",
+                    "Permitido até 0,6 gramas de álcool por litro de sangue para motoristas experientes.",
+                    "Tolerância de até 1 garrafa em viagens rodoviárias."
+                ],
+                correctIndex: 0,
+                explanation: "A legislação brasileira adota Tolerância Zero para álcool e condução de veículos automotores."
+            },
+            {
+                category: "Saúde no Trânsito",
+                question: "Quais são os sintomas de fadiga e sono ao volante e qual é a única atitude segura a se tomar?",
+                options: [
+                    "Visão embaçada e bocejos; deve-se tomar café bem forte e seguir viagem rápido.",
+                    "Perda de foco e piscadas longas; deve-se parar em local seguro e descansar/dormir.",
+                    "Cansaço muscular; basta ligar o rádio em volume alto para afastar o sono.",
+                    "Sonolência suave; deve-se abrir a janela e acelerar para sentir o vento."
+                ],
+                correctIndex: 1,
+                explanation: "A única solução eficaz para a fadiga e sonolência ao volante é parar o veículo em local seguro para descansar."
+            },
+            {
+                category: "Saúde no Trânsito",
+                question: "O estresse e a agressividade no trânsito podem levar a acidentes graves. Qual conduta expressa empatia e inteligência emocional?",
+                options: [
+                    "Responder a provocação e fechar o outro motorista para impor respeito.",
+                    "Manter a calma, ignorar provoaçoes e priorizar a segurança de todos na via.",
+                    "Usar buzina longa e luz alta para repreender motoristas lentos.",
+                    "Ultrapassar pelo acostamento para se livrar do engarrafamento."
+                ],
+                correctIndex: 1,
+                explanation: "O autocontrole emocional e a cortesia evitam conflitos e previnem brigas e colisões desnecessárias."
+            },
+            {
+                category: "Saúde no Trânsito",
+                question: "Alguns medicamentos de uso contínuo ou para gripe/alergia podem causar sonolência. O que o motorista deve fazer?",
+                options: [
+                    "Consultar a bula ou médica(o) para saber se a medicação afeta a capacidade de dirigir.",
+                    "Tomar o remédio e dirigir apenas em velocidades elevadas para não dormir.",
+                    "Dobrar a dose de café antes de dirigir sob efeito do remédio.",
+                    "Ignorar o aviso da bula se a viagem for curta."
+                ],
+                correctIndex: 0,
+                explanation: "Medicamentos com efeitos sedativos ou que afetam os reflexos exigem cautela e proibição de dirigir sob seus efeitos."
+            },
+            {
+                category: "Saúde no Trânsito",
+                question: "A poluição sonora urbana gerada por escapamentos adulterados e buzinas excessivas causa:",
+                options: [
+                    "Aumento da atenção dos pedestres sem impactos à saúde.",
+                    "Estresse, irritabilidade, perda auditiva progressiva e fadiga no trânsito.",
+                    "Redução de acidentes pela sonorização do ambiente público.",
+                    "Melhor desempenho na velocidade média dos veículos."
+                ],
+                correctIndex: 1,
+                explanation: "Ruídos excessivos causam danos físicos e psicológicos aos cidadãos e aumentam a irritabilidade ao volante."
+            },
+            {
+                category: "Saúde no Trânsito",
+                question: "O uso do celular ao dirigir (mesmo com viva-voz ou fone de ouvido) causa o fenômeno conhecido como:",
+                options: [
+                    "Aumento do campo de visão periférica do condutor.",
+                    "Atenção dividida ou 'cegueira por desatenção', aumentando muito o risco de acidentes.",
+                    "Melhoria no tempo de reação do condutor.",
+                    "Nenhum impacto se o condutor for jovem e multitarefa."
+                ],
+                correctIndex: 1,
+                explanation: "O celular desvia a atenção cognitiva e visual do motorista, tornando-o cego a perigos iminentes na pista."
+            },
+            {
+                category: "Saúde no Trânsito",
+                question: "Por que os pedestres e ciclistas são considerados os entes mais vulneráveis no trânsito?",
+                options: [
+                    "Porque não pagam impostos para circulação nas vias públicas.",
+                    "Porque não possuem estrutura metálica de proteção ao redor do corpo em caso de impacto.",
+                    "Porque transitam sempre na contramão de direção das avenidas.",
+                    "Porque não precisam obedecer a nenhuma regra de sinalização."
+                ],
+                correctIndex: 1,
+                explanation: "Sem carcaça de proteção, os corpos de pedestres e ciclistas absorvem diretamente toda a energia do impacto."
+            },
+            {
+                category: "Saúde no Trânsito",
+                question: "Ao avistar um pedestre idoso ou com mobilidade reduzida atravessando a via lentamente fora da faixa, o motorista deve:",
+                options: [
+                    "Acelerar o motor para apressá-lo e buzinar com insistência.",
+                    "Parar o veículo com segurança, aguardar a travessia completa e ter paciência.",
+                    "Desviar passando bem próximo ao pedestre para economizar tempo.",
+                    "Gritar da janela alertando que o pedestre está errado."
+                ],
+                correctIndex: 1,
+                explanation: "A cidadania e a lei priorizam a vida e a integridade dos pedestres mais vulneráveis no espaço urbano."
+            },
+            {
+                category: "Saúde no Trânsito",
+                question: "Como o estado emocional de intensa raiva ou tristeza afeta a pilotagem ou direção?",
+                options: [
+                    "Aumenta a precisão das manobras e a atenção aos espelhos.",
+                    "Altera o julgamento de riscos, tornando a pilotagem impulsiva ou desatenta.",
+                    "Não interfere na capacidade mecânica de guiar o veículo.",
+                    "Reduz em 50% o tempo necessário para frear o carro."
+                ],
+                correctIndex: 1,
+                explanation: "Emoções extremas afetam a percepção de perigo e tornam a conduta no trânsito imprudente ou desconcentrada."
+            },
+            {
+                category: "Saúde no Trânsito",
+                question: "O uso de drogas ilícitas (como maconha, cocaína ou anfetaminas) antes de dirigir é:",
+                options: [
+                    "Permitido em rodovias federais se o motorista não estiver em alta velocidade.",
+                    "Proibido e enquadrado como infração gravíssima e crime de trânsito conforme o CTB.",
+                    "Tolerado caso o condutor comprove uso há mais de 24 horas.",
+                    "Recomendado para evitar o sono em viagens de longa distância."
+                ],
+                correctIndex: 1,
+                explanation: "Dirigir sob efeito de substâncias psicoativas altera gravemente as capacidades cognitivas e é estritamente proibido por lei."
+            },
+            {
+                category: "Saúde no Trânsito",
+                question: "O que é 'Cidadania no Trânsito'?",
+                options: [
+                    "O ato de dirigir apenas no seu bairro sem causar problemas à vizinhança.",
+                    "O exercício dos direitos e deveres individuais e coletivos visando a convivência harmoniosa e segura na via.",
+                    "Saber todas as marcas de carros esportivos do mercado internacional.",
+                    "Garantir que os carros novos tenham preferência de passagem sobre os antigos."
+                ],
+                correctIndex: 1,
+                explanation: "Cidadania é o respeito mútuo, a convivência civilizada e o cumprimento de regras para o bem comum de todos no trânsito."
+            },
+
+            // SINALIZAÇÃO DE TRÂNSITO (12 Questões)
+            {
+                category: "Sinalização de Trânsito",
+                question: "Qual é a função e o formato predominante das Placas de Regulamentação no trânsito brasileiro?",
+                options: [
+                    "Formato circular com fundo branco e borda vermelha; servem para informar proibições, obrigações e restrições.",
+                    "Formato de losango amarelo; servem para alertar sobre perigos na via.",
+                    "Formato retangular verde ou azul; servem para indicar caminhos e distâncias.",
+                    "Formato triangular cinza; servem apenas para indicar áreas escolares."
+                ],
+                correctIndex: 0,
+                explanation: "Placas de Regulamentação (vermelhas/brancas e circulares) impõem regras obrigatórias. Seu descumprimento gera infração."
+            },
+            {
+                category: "Sinalização de Trânsito",
+                question: "Qual é a única placa de sinalização de Regulamentação que possui formato octogonal (8 lados)?",
+                options: [
+                    "Dê a Preferência.",
+                    "Parada Obrigatória (PARE).",
+                    "Proibido Estacionar.",
+                    "Sentido Proibido."
+                ],
+                correctIndex: 1,
+                explanation: "A placa 'Parada Obrigatória' (R-1) é a única octogonal para ser identificada mesmo coberta por lama ou neve."
+            },
+            {
+                category: "Sinalização de Trânsito",
+                question: "As Placas de Advertência (amarelas em formato de losango) possuem qual finalidade principal?",
+                options: [
+                    "Alertar os usuários da via sobre condições potencialmente perigosas à frente.",
+                    "Impor multas imediatas aos condutores que desrespeitarem a velocidade.",
+                    "Indicar pontos turísticos e serviços auxiliares de combustível.",
+                    "Orientar sobre linhas de metrô e paradas de ônibus."
+                ],
+                correctIndex: 0,
+                explanation: "As placas amarelas alertam antecipadamente sobre curvas, lombadas, cruzamentos e perigos na pista."
+            },
+            {
+                category: "Sinalização de Trânsito",
+                question: "O que indica uma linha contínua amarela pintada no centro de uma pista de mão dupla?",
+                options: [
+                    "É permitido ultrapassar em ambos os sentidos da pista.",
+                    "Proibido ultrapassar para ambos os sentidos de circulação.",
+                    "Pista exclusiva para motocicletas e bicicletas.",
+                    "Área liberada para estacionamento de emergência no centro da pista."
+                ],
+                correctIndex: 1,
+                explanation: "Linha contínua amarela proíbe a manobra de ultrapassagem em ambos os sentidos da via."
+            },
+            {
+                category: "Sinalização de Trânsito",
+                question: "Na hierarquia da sinalização de trânsito, quem tem prioridade máxima sobre as demais normas e sinais?",
+                options: [
+                    "As indicações do semáforo luminoso.",
+                    "As ordens do Agente de Trânsito presente no local.",
+                    "As placas de regulamentação de parada obrigatória.",
+                    "A pintura horizontal da pista."
+                ],
+                correctIndex: 1,
+                explanation: "As ordens e gestos do Agente de Trânsito prevalecem sobre todos os sinais, semáforos e regras da via (Art. 89 do CTB)."
+            },
+            {
+                category: "Sinalização de Trânsito",
+                question: "O que indica a placa de regulamentação com a letra 'E' cortada por uma única linha diagonal vermelha?",
+                options: [
+                    "Proibido Parar e Estacionar.",
+                    "Proibido Estacionar (permitida a parada rápida para embarque/desembarque).",
+                    "Estacionamento Exclusivo para Idosos.",
+                    "Estacionamento Permitido para todos os veículos."
+                ],
+                correctIndex: 1,
+                explanation: "Um traço sobre o 'E' significa Proibido Estacionar (parada rápida permitida). Dois traços em 'X' significam Proibido Parar e Estacionar."
+            },
+            {
+                category: "Sinalização de Trânsito",
+                question: "Qual o significado da luz amarela piscando isoladamente em um semáforo (amarelo intermitente)?",
+                options: [
+                    "Parada obrigatória e desligamento imediato do motor.",
+                    "Avançar com velocidade máxima antes do sinal ficar vermelho.",
+                    "Atenção reduzida! Reduzir a velocidade e cruzar com cautela.",
+                    "Semáforo quebrado; preferência total de quem vem pela esquerda."
+                ],
+                correctIndex: 2,
+                explanation: "O amarelo intermitente orienta o condutor a reduzir a velocidade e atravessar a interseção com atenção redobrada."
+            },
+            {
+                category: "Sinalização de Trânsito",
+                question: "As placas de fundo verde ou azul com letras brancas pertencem a qual grupo de sinalização?",
+                options: [
+                    "Placas de Regulamentação.",
+                    "Placas de Advertência de Perigo.",
+                    "Placas de Indicação e Orientação de Destino/Localização.",
+                    "Placas de Obras Temporárias."
+                ],
+                correctIndex: 2,
+                explanation: "Placas azuis e verdes são de Indicação; orientam condutores sobre vias, destinos, distâncias e serviços."
+            },
+            {
+                category: "Sinalização de Trânsito",
+                question: "O que indica a marcação horizontal de linhas diagonais brancas ou amarelas pintadas na pista chamadas de 'Zebrado'?",
+                options: [
+                    "Área de canalização em que é proibido trafegar ou estacionar.",
+                    "Área reservada para faixa de pedestres com alto fluxo.",
+                    "Local liberado para retorno e conversão em alta velocidade.",
+                    "Pista exclusiva para quadriciclos e caminhonetes."
+                ],
+                correctIndex: 0,
+                explanation: "As marcas de canalização (zebrados) orientam os fluxos de tráfego; é proibido transitar ou parar sobre elas."
+            },
+            {
+                category: "Sinalização de Trânsito",
+                question: "Qual a cor padrão utilizada nas placas de sinalização de OBRAS na pista?",
+                options: [
+                    "Fundo Amarelo e borda Verde.",
+                    "Fundo Laranja com símbolos e legendas em Preto.",
+                    "Fundo Vermelho e borda Branca.",
+                    "Fundo Lilás com reflexos prateados."
+                ],
+                correctIndex: 1,
+                explanation: "A sinalização de obras e intervenções temporárias utiliza a cor Laranja para alerta ostensivo."
+            },
+            {
+                category: "Sinalização de Trânsito",
+                question: "Uma linha amarela seccionada (pontilhada) no centro da via indica:",
+                options: [
+                    "Proibição absoluta de mudança de faixa.",
+                    "Permissão para realizar ultrapassagem para ambos os sentidos, com segurança.",
+                    "Trecho exclusivo para ciclistas no período noturno.",
+                    "Obrigado a parar antes de prosseguir."
+                ],
+                correctIndex: 1,
+                explanation: "A linha seccionada ou tracejada permite a manobra de ultrapassagem, desde que haja condições de segurança."
+            },
+            {
+                category: "Sinalização de Trânsito",
+                question: "Qual o gesto do agente de trânsito ao erguer o braço verticalmente com a palma da mão para a frente?",
+                options: [
+                    "Ordem de parada obrigatória para todos os veículos aos quais o gesto se dirige.",
+                    "Ordem de diminuição de velocidade apenas para caminhões.",
+                    "Sinal de autorização para ultrapassagem rápida.",
+                    "Saudação formal ao condutor."
+                ],
+                correctIndex: 0,
+                explanation: "O braço erguido verticalmente pelo agente indica ordem de parada para os fluxos de trânsito indicados."
+            },
+
+            // LEGISLAÇÃO DE TRÂNSITO (13 Questões)
+            {
+                category: "Legislação (CTB)",
+                question: "Qual é o documento oficial que regulamenta as normas de trânsito em todo o território nacional brasileiro?",
+                options: [
+                    "Código de Trânsito Brasileiro (CTB - Lei nº 9.503/1997).",
+                    "Regulamento Geral de Rodovias e Estradas (RGRE).",
+                    "Constituição Federal do Trânsito Urbano.",
+                    "Código Civil de Mobilidade Urbana."
+                ],
+                correctIndex: 0,
+                explanation: "O CTB (Lei 9.503/1997) rege as regras, infrações e direitos no trânsito em todo o Brasil."
+            },
+            {
+                category: "Legislação (CTB)",
+                question: "Qual a idade mínima estabelecida pela legislação brasileira para obter a CNH (Carteira Nacional de Habilitação)?",
+                options: [
+                    "16 anos completos com autorização dos pais.",
+                    "18 anos completos e ser penalmente imputável.",
+                    "21 anos completos para qualquer categoria de veículo.",
+                    "17 anos e 6 meses com ensino médio completo."
+                ],
+                correctIndex: 1,
+                explanation: "Para habilitar-se, é obrigatório ter 18 anos completos, saber ler/escrever e ser penalmente imputável (responder por seus atos)."
+            },
+            {
+                category: "Legislação (CTB)",
+                question: "Quais são as quatro categorias de gravidade das infrações de trânsito no Brasil?",
+                options: [
+                    "Urgente, Perigosa, Média e Leve.",
+                    "Gravíssima, Grave, Média e Leve.",
+                    "Máxima, Alta, Moderada e Baixa.",
+                    "Criminal, Administrativa, Civil e Urbana."
+                ],
+                correctIndex: 1,
+                explanation: "As infrações do CTB são classificadas em: Gravíssima (7 pontos), Grave (5 pontos), Média (4 pontos) e Leve (3 pontos)."
+            },
+            {
+                category: "Legislação (CTB)",
+                question: "Avançar o sinal vermelho do semáforo ou o de parada obrigatória é considerado qual tipo de infração?",
+                options: [
+                    "Infração Média com penalidade de advertência verbal.",
+                    "Infração Gravíssima com pontuação de 7 pontos na carteira.",
+                    "Infração Grave com 5 pontos na carteira.",
+                    "Infração Leve sem cobrança de multa financeira."
+                ],
+                correctIndex: 1,
+                explanation: "Avançar sinal vermelho ou parada obrigatória (PARE) é infração gravíssima (7 pontos + multa)."
+            },
+            {
+                category: "Legislação (CTB)",
+                question: "Em vias urbanas onde não houver sinalização regulamentadora de velocidade, qual é o limite para vias Arteriais?",
+                options: [
+                    "110 km/h.",
+                    "60 km/h.",
+                    "80 km/h.",
+                    "30 km/h."
+                ],
+                correctIndex: 1,
+                explanation: "Sem sinalização, os limites urbanos são: Trânsito Rápido (80km/h), Arterial (60km/h), Coletora (40km/h) e Local (30km/h)."
+            },
+            {
+                category: "Legislação (CTB)",
+                question: "Conduzir motocicleta, ciclomotor ou motoneta sem usar capacete de segurança com viseira é infração:",
+                options: [
+                    "Grave, gerando retenção da moto para regularização.",
+                    "Gravíssima, que gera multa e suspensão direta do direito de dirigir.",
+                    "Média, com recolhimento apenas do documento de licenciamento.",
+                    "Leve, resultando em advertência por escrito na primeira vez."
+                ],
+                correctIndex: 1,
+                explanation: "Pilotar sem capacete adequado é infração gravíssima mandatória com suspensão direta da CNH do infrator."
+            },
+            {
+                category: "Legislação (CTB)",
+                question: "Qual o prazo de validade da Permissão para Dirigir (PPD / CNH Provisória) concedida ao candidato aprovado no exame?",
+                options: [
+                    "6 meses.",
+                    "1 ano (12 meses).",
+                    "2 anos.",
+                    "5 anos."
+                ],
+                correctIndex: 1,
+                explanation: "A PPD vale por 1 ano. Se o novato não cometer infração gravíssima, grave nem for reincidente em média, recebe a CNH definitiva."
+            },
+            {
+                category: "Legislação (CTB)",
+                question: "Deixar de prestar socorro à vítima de acidente de trânsito quando possível fazê-lo sem risco pessoal constitui:",
+                options: [
+                    "Infração leve e falta de cortesia civil.",
+                    "Infração gravíssima e Crime de Trânsito tipificado no CTB.",
+                    "Infração média passível apenas de multa administrativa.",
+                    "Apenas transgressão das regras de trânsito municipais."
+                ],
+                correctIndex: 1,
+                explanation: "O omissão de socorro é infração gravíssima com multiplicador e também crime de trânsito sujeito a detenção."
+            },
+            {
+                category: "Legislação (CTB)",
+                question: "O uso do cinto de segurança é obrigatório para:",
+                options: [
+                    "Apenas o condutor do veículo e o passageiro do banco da frente.",
+                    "Condutor e todos os passageiros do veículo em todas as vias do território nacional.",
+                    "Apenas em rodovias estaduais e federais acima de 80 km/h.",
+                    "Passageiros do banco traseiro apenas se forem menores de 12 anos."
+                ],
+                correctIndex: 1,
+                explanation: "O cinto de segurança é obrigatório para condutor e todos os passageiros em qualquer via pública brasileira."
+            },
+            {
+                category: "Legislação (CTB)",
+                question: "Qual a distância lateral mínima de segurança que o motorista deve manter ao ultrapassar uma bicicleta?",
+                options: [
+                    "0,5 metro.",
+                    "1,5 metro.",
+                    "2,0 metros.",
+                    "3,0 metros."
+                ],
+                correctIndex: 1,
+                explanation: "Ao passar por um ciclista, o CTB obriga manter a distância lateral mínima de 1,5 metro e reduzir a velocidade."
+            },
+            {
+                category: "Legislação (CTB)",
+                question: "As crianças com idade inferior a 10 anos que não tenham atingido 1,45m de altura devem ser transportadas no veículo:",
+                options: [
+                    "No banco dianteiro com o cinto de segurança do adulto.",
+                    "No banco traseiro, em dispositivo de retenção adequado à sua idade e peso (bebê-conforto, cadeirinha ou assento de elevação).",
+                    "No colo do passageiro do banco da frente com cinto compartilhado.",
+                    "Em qualquer lugar do veículo desde que o motorista dirija devagar."
+                ],
+                correctIndex: 1,
+                explanation: "Crianças menores de 10 anos e com menos de 1,45m devem ir no banco traseiro usando dispositivo adequado de retenção."
+            },
+            {
+                category: "Legislação (CTB)",
+                question: "Estacionar o veículo sobre a faixa de pedestres ou sobre a calçada constitui infração de trânsito de qual gravidade?",
+                options: [
+                    "Infração Leve.",
+                    "Infração Grave, sujeita a multa e remoção do veículo.",
+                    "Infração Média sem remoção guincho.",
+                    "Permitido se for por menos de 10 minutos com o pisca-alerta ligado."
+                ],
+                correctIndex: 1,
+                explanation: "Estacionar em calçada ou faixa de pedestre impede a circulação de pedestres e é infração grave com remoção do veículo."
+            },
+            {
+                category: "Legislação (CTB)",
+                question: "Participar de corridas ou rachas clandestinos em via pública sem autorização da autoridade é classificado como:",
+                options: [
+                    "Infração gravíssima com multa multiplicada por 10 e crime de trânsito com penas de detenção.",
+                    "Infração média passível apenas de advertência educativa.",
+                    "Esporte urbano tolerado nos finais de semana de madrugada.",
+                    "Infração leve com perda de 3 pontos na CNH."
+                ],
+                correctIndex: 0,
+                explanation: "Disputar 'racha' é conduta de altíssimo risco, enquadrada como infração gravíssima gravíssima (multa x10) e crime de trânsito."
+            }
+        ];
+
+        // =========================================================================
+        // ESTADO DA APLICAÇÃO (STATE MANAGEMENT)
+        // =========================================================================
+        let shuffledQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = []; // Guarda as respostas selecionadas {selectedIndex, isCorrect}
+
+        // =========================================================================
+        // UTILITÁRIO: EMBARALHAMENTO FISCHER-YATES COM MANUTENÇÃO DO ÍNDICE CORRETO
+        // =========================================================================
+        function prepareShuffledQuiz() {
+            // Clona o banco original de questões
+            let bankCopy = JSON.parse(JSON.stringify(rawQuestionBank));
+            
+            // Embaralha as 50 questões
+            for (let i = bankCopy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [bankCopy[i], bankCopy[j]] = [bankCopy[j], bankCopy[i]];
+            }
+
+            // Para cada questão, embaralha aleatoriamente as 4 alternativas
+            bankCopy.forEach(q => {
+                const correctText = q.options[q.correctIndex];
+                
+                // Embaralha o array de opções
+                for (let i = q.options.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [q.options[i], q.options[j]] = [q.options[j], q.options[i]];
+                }
+                
+                // Atualiza o novo correctIndex da opção correta embaralhada
+                q.correctIndex = q.options.indexOf(correctText);
+            });
+
+            shuffledQuestions = bankCopy;
+            userAnswers = new Array(shuffledQuestions.length).fill(null);
+            currentQuestionIndex = 0;
+        }
+
+        // =========================================================================
+        // NAVEGAÇÃO DE TELAS (SPA LOGIC)
+        // =========================================================================
+        function showScreen(screenId) {
+            document.getElementById('home-screen').classList.add('hidden');
+            document.getElementById('study-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+
+            document.getElementById(screenId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function startQuiz() {
+            prepareShuffledQuiz();
+            showScreen('quiz-screen');
+            renderQuestion();
+        }
+
+        function confirmResetQuiz() {
+            if (confirm("Deseja reiniciar o quiz? Seu progresso atual nesta sessão será perdido.")) {
+                startQuiz();
+            }
+        }
+
+        // =========================================================================
+        // MÓDULO DE ESTUDO INTERATIVO (GUIA DO IDOL)
+        // =========================================================================
+        const studyData = {
+            defensiva: {
+                title: "🛡️ Direção Defensiva: O Show do Controle!",
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-sm text-gray-300">Direção Defensiva é a arte de dirigir de forma a evitar acidentes, apesar das ações incorretas dos outros e das condições adversas do tempo e das vias.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+                            <div class="bg-slate-900/80 p-4 rounded-xl border border-kpink/40">
+                                <span class="text-2xl">👁️</span>
+                                <h5 class="font-orbitron font-bold text-kpink text-sm mt-1">1. VER</h5>
+                                <p class="text-xs text-gray-400 mt-1">Enxergar o trânsito à frente, espelhos e pontos cegos. Esteja atento ao ambiente!</p>
+                            </div>
+                            <div class="bg-slate-900/80 p-4 rounded-xl border border-kcyan/40">
+                                <span class="text-2xl">🧠</span>
+                                <h5 class="font-orbitron font-bold text-kcyan text-sm mt-1">2. PENSAR</h5>
+                                <p class="text-xs text-gray-400 mt-1">Avaliar os riscos rapidamente e prever os possíveis erros dos outros motoristas.</p>
+                            </div>
+                            <div class="bg-slate-900/80 p-4 rounded-xl border border-kyellow/40">
+                                <span class="text-2xl">⚡</span>
+                                <h5 class="font-orbitron font-bold text-kyellow text-sm mt-1">3. AGIR</h5>
+                                <p class="text-xs text-gray-400 mt-1">Tomar a decisão correta a tempo: frear, desviar ou reduzir suavemente.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/50 p-4 rounded-xl border-l-4 border-kpink space-y-2">
+                            <h5 class="font-orbitron font-bold text-white text-sm">💡 Regra dos 2 Segundos (Distância de Seguimento)</h5>
+                            <p class="text-xs text-gray-300">Escolha um ponto fixo na estrada (uma árvore ou placa). Quando o carro à sua frente passar por ele, conte "um mil e um, um mil e dois". Se seu carro passar pelo ponto antes de terminar a contagem, aumente a distância!</p>
+                        </div>
+                    </div>
+                `
+            },
+            saude: {
+                title: "🧠 Saúde e Psicológico no Trânsito",
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-sm text-gray-300">Sua mente e seu corpo são o motor principal do veículo! Estar sob estresse, cansaço ou substâncias altera seu tempo de resposta no palco viário.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+                            <div class="bg-slate-900/80 p-4 rounded-xl border border-red-500/40">
+                                <h5 class="font-orbitron font-bold text-red-400 text-sm flex items-center gap-2">
+                                    🚫 Álcool x Direção (Tolerância Zero)
+                                </h5>
+                                <p class="text-xs text-gray-300 mt-2">O álcool diminui o tempo de reação, reduz a visão periférica e cria falsa sensação de confiança. No Brasil, vigora a <strong>Lei Seca</strong> com tolerância zero.</p>
+                            </div>
+                            <div class="bg-slate-900/80 p-4 rounded-xl border border-purple-400/40">
+                                <h5 class="font-orbitron font-bold text-purple-400 text-sm flex items-center gap-2">
+                                    📱 Distração do Celular
+                                </h5>
+                                <p class="text-xs text-gray-300 mt-2">Digitar ou olhar o celular a 80 km/h equivale a dirigir um campo de futebol inteiro de olhos fechados. Mantenha o foco total!</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/50 p-4 rounded-xl border-l-4 border-kcyan space-y-2">
+                            <h5 class="font-orbitron font-bold text-white text-sm">🤝 Empatia com Pedestres e Ciclistas</h5>
+                            <p class="text-xs text-gray-300">Lembre-se: no trânsito, os veículos de maior porte são sempre responsáveis pela segurança dos menores, e todos cuidam dos pedestres.</p>
+                        </div>
+                    </div>
+                `
+            },
+            sinalizacao: {
+                title: "🛑 Sinalização de Trânsito: Entenda a Paleta do Palco",
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-sm text-gray-300">As placas e marcações viárias organizam o trânsito. Cada cor e formato possui um propósito específico pedagógico.</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-4">
+                            <div class="bg-slate-900/80 p-4 rounded-xl border border-red-500 text-center">
+                                <div class="w-10 h-10 mx-auto rounded-full bg-red-600 border-2 border-white flex items-center justify-center font-bold text-xs mb-2">PARE</div>
+                                <h5 class="font-orbitron font-bold text-red-400 text-xs">REGULAMENTAÇÃO</h5>
+                                <p class="text-[11px] text-gray-400 mt-1">Vermelhas e Circulares. Obrigatórias! Descumprir gera multa.</p>
+                            </div>
+                            <div class="bg-slate-900/80 p-4 rounded-xl border border-yellow-500 text-center">
+                                <div class="w-10 h-10 mx-auto bg-yellow-400 text-slate-900 rotate-45 flex items-center justify-center font-bold text-xs mb-2"><span class="-rotate-45">⚠️</span></div>
+                                <h5 class="font-orbitron font-bold text-yellow-400 text-xs">ADVERTÊNCIA</h5>
+                                <p class="text-[11px] text-gray-400 mt-1">Amarelas e Losangos. Alertam sobre perigos à frente na via.</p>
+                            </div>
+                            <div class="bg-slate-900/80 p-4 rounded-xl border border-emerald-500 text-center">
+                                <div class="w-10 h-10 mx-auto bg-emerald-600 rounded text-white flex items-center justify-center font-bold text-xs mb-2">BR-101</div>
+                                <h5 class="font-orbitron font-bold text-emerald-400 text-xs">INDICAÇÃO</h5>
+                                <p class="text-[11px] text-gray-400 mt-1">Verdes/Azuis. Indicam rotas, distâncias e locais de serviço.</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            legislacao: {
+                title: "⚖️ Legislação de Trânsito (CTB)",
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-sm text-gray-300">O Código de Trânsito Brasileiro estabelece os direitos e deveres dos condutores e pedestres.</p>
+                        
+                        <div class="bg-slate-900/80 p-4 rounded-xl border border-purple-500/40 space-y-3">
+                            <h5 class="font-orbitron font-bold text-purple-400 text-sm">Pontuação de Infrações na CNH:</h5>
+                            <ul class="text-xs text-gray-300 space-y-1">
+                                <li>🔴 <strong>Gravíssima:</strong> 7 Pontos na CNH</li>
+                                <li>🟠 <strong>Grave:</strong> 5 Pontos na CNH</li>
+                                <li>🟡 <strong>Média:</strong> 4 Pontos na CNH</li>
+                                <li>🟢 <strong>Leve:</strong> 3 Pontos na CNH</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-slate-900/50 p-4 rounded-xl border-l-4 border-kyellow text-xs text-gray-300">
+                            <strong>Atenção Novatos (PPD):</strong> No primeiro ano com a Permissão para Dirigir, você NÃO pode cometer nenhuma infração Gravíssima, Grave ou ser reincidente em Média, sob pena de perder o direito à CNH definitiva!
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        function switchStudyTab(tabKey) {
+            const keys = ['defensiva', 'saude', 'sinalizacao', 'legislacao'];
+            keys.forEach(k => {
+                const btn = document.getElementById(`tab-${k}`);
+                if (k === tabKey) {
+                    btn.className = "px-4 py-2 rounded-lg text-xs md:text-sm font-orbitron font-bold bg-kpink text-white transition";
+                } else {
+                    btn.className = "px-4 py-2 rounded-lg text-xs md:text-sm font-orbitron font-bold bg-kcard text-gray-400 hover:text-white transition";
+                }
+            });
+
+            const data = studyData[tabKey];
+            document.getElementById('study-content').innerHTML = `
+                <h3 class="font-orbitron text-lg md:text-xl font-extrabold text-kcyan">${data.title}</h3>
+                ${data.content}
+            `;
+        }
+
+        function openStudyTab(tabKey) {
+            showScreen('study-screen');
+            switchStudyTab(tabKey);
+        }
+
+        // =========================================================================
+        // LOGICA DE RENDERIZAÇÃO DO QUIZ
+        // =========================================================================
+        function renderQuestion() {
+            const q = shuffledQuestions[currentQuestionIndex];
+            const total = shuffledQuestions.length;
+
+            // Atualiza cabeçalho e progresso
+            document.getElementById('quiz-category-badge').textContent = q.category.toUpperCase();
+            document.getElementById('quiz-counter').textContent = `Questão ${currentQuestionIndex + 1} de ${total}`;
+            const percent = ((currentQuestionIndex + 1) / total) * 100;
+            document.getElementById('quiz-progress-bar').style.width = `${percent}%`;
+
+            // Enunciado
+            document.getElementById('question-text').textContent = `${currentQuestionIndex + 1}. ${q.question}`;
+
+            // Contêiner de Opções
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const previousAnswer = userAnswers[currentQuestionIndex];
+            const letters = ['A', 'B', 'C', 'D'];
+
+            q.options.forEach((optText, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-xl font-poppins text-xs md:text-sm transition flex items-center gap-3 border glass-panel hover:border-kcyan/60`;
+
+                // Aplica estilos caso a questão já tenha sido respondida previamente
+                if (previousAnswer !== null) {
+                    if (index === q.correctIndex) {
+                        btn.classList.add('border-green-400', 'bg-green-500/20', 'text-green-300', 'font-bold');
+                    } else if (index === previousAnswer.selectedIndex && !previousAnswer.isCorrect) {
+                        btn.classList.add('border-red-500', 'bg-red-500/20', 'text-red-300');
+                    } else {
+                        btn.classList.add('opacity-50', 'border-gray-800');
+                    }
+                } else {
+                    btn.classList.add('border-gray-800', 'hover:bg-slate-800/80', 'text-gray-200');
+                }
+
+                btn.onclick = () => selectOption(index);
+
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-lg bg-slate-900 border border-white/20 font-orbitron font-bold flex items-center justify-center shrink-0 ${previousAnswer !== null && index === q.correctIndex ? 'text-green-400 border-green-400' : 'text-kcyan'}">
+                        ${letters[index]}
+                    </span>
+                    <span class="flex-grow">${optText}</span>
+                `;
+
+                optionsContainer.appendChild(btn);
+            });
+
+            // Feedback Pedagógico
+            const feedbackBox = document.getElementById('feedback-box');
+            if (previousAnswer !== null) {
+                feedbackBox.classList.remove('hidden');
+                const titleEl = document.getElementById('feedback-title');
+                const textEl = document.getElementById('feedback-text');
+
+                if (previousAnswer.isCorrect) {
+                    feedbackBox.className = "p-4 rounded-xl border border-green-500/50 bg-green-950/40 space-y-1 animate-fade-in";
+                    titleEl.className = "flex items-center gap-2 font-orbitron font-bold text-sm text-green-400";
+                    titleEl.innerHTML = `<i class="fa-solid fa-circle-check text-base"></i> Resposta Correta! (Debut Perfeito)`;
+                } else {
+                    feedbackBox.className = "p-4 rounded-xl border border-red-500/50 bg-red-950/40 space-y-1 animate-fade-in";
+                    titleEl.className = "flex items-center gap-2 font-orbitron font-bold text-sm text-red-400";
+                    titleEl.innerHTML = `<i class="fa-solid fa-circle-xmark text-base"></i> Resposta Incorreta`;
+                }
+
+                textEl.textContent = q.explanation;
+            } else {
+                feedbackBox.classList.add('hidden');
+            }
+
+            // Atualiza estados dos botões de navegação
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+
+            // Botão Anterior
+            if (currentQuestionIndex === 0) {
+                btnPrev.disabled = true;
+                btnPrev.classList.add('opacity-40', 'cursor-not-allowed');
+            } else {
+                btnPrev.disabled = false;
+                btnPrev.classList.remove('opacity-40', 'cursor-not-allowed');
+            }
+
+            // Botão Próxima só desbloqueia se já tiver respondido a questão atual
+            if (previousAnswer !== null) {
+                btnNext.disabled = false;
+                btnNext.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-gray-700');
+                btnNext.classList.add('glow-button-cyan', 'bg-kcyan', 'text-slate-900');
+
+                if (currentQuestionIndex === total - 1) {
+                    btnNext.innerHTML = `Finalizar Quiz <i class="fa-solid fa-flag-checkered"></i>`;
+                } else {
+                    btnNext.innerHTML = `Próxima <i class="fa-solid fa-chevron-right"></i>`;
+                }
+            } else {
+                btnNext.disabled = true;
+                btnNext.classList.add('opacity-50', 'cursor-not-allowed', 'bg-gray-700');
+                btnNext.classList.remove('glow-button-cyan', 'bg-kcyan', 'text-slate-900');
+                btnNext.innerHTML = `Próxima <i class="fa-solid fa-chevron-right"></i>`;
+            }
+        }
+
+        // =========================================================================
+        // MANIPULAÇÃO DA SELEÇÃO DE RESPOSTA
+        // =========================================================================
+        function selectOption(index) {
+            // Permite responder ou alterar a resposta antes de prosseguir
+            const q = shuffledQuestions[currentQuestionIndex];
+            const isCorrect = (index === q.correctIndex);
+
+            userAnswers[currentQuestionIndex] = {
+                selectedIndex: index,
+                isCorrect: isCorrect
+            };
+
+            // Efeito visual de confete leve se acertar de primeira
+            if (isCorrect && typeof confetti === 'function') {
+                confetti({
+                    particleCount: 35,
+                    spread: 60,
+                    origin: { y: 0.7 },
+                    colors: ['#FF007F', '#00F0FF', '#FFE600']
+                });
+            }
+
+            // Re-renderiza para atualizar cores e desbloquear o botão "Próxima"
+            renderQuestion();
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+                window.scrollTo({ top: 100, behavior: 'smooth' });
+            } else {
+                calculateAndShowResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+                window.scrollTo({ top: 100, behavior: 'smooth' });
+            }
+        }
+
+        // =========================================================================
+        // CÁLCULO DE RESULTADOS E RANKING IDOL
+        // =========================================================================
+        function calculateAndShowResults() {
+            let correctTotal = 0;
+            const categoryStats = {
+                "Direção Defensiva": { correct: 0, total: 0 },
+                "Saúde no Trânsito": { correct: 0, total: 0 },
+                "Sinalização de Trânsito": { correct: 0, total: 0 },
+                "Legislação (CTB)": { correct: 0, total: 0 }
+            };
+
+            shuffledQuestions.forEach((q, i) => {
+                const ans = userAnswers[i];
+                if (categoryStats[q.category]) {
+                    categoryStats[q.category].total++;
+                }
+
+                if (ans && ans.isCorrect) {
+                    correctTotal++;
+                    if (categoryStats[q.category]) {
+                        categoryStats[q.category].correct++;
+                    }
+                }
+            });
+
+            const total = shuffledQuestions.length;
+            const percentage = Math.round((correctTotal / total) * 100);
+
+            // Atualiza elementos da tela de resultados
+            document.getElementById('final-score').textContent = correctTotal;
+            document.getElementById('final-percentage').textContent = `(${percentage}%)`;
+
+            const rankCard = document.getElementById('rank-card');
+            const rankIcon = document.getElementById('rank-badge-icon');
+            const rankTitle = document.getElementById('rank-title');
+            const rankDesc = document.getElementById('rank-description');
+
+            // RANKS IDOL K-POP
+            if (percentage >= 90) {
+                rankIcon.textContent = "👑";
+                rankTitle.textContent = "K-Pop Traffic Superstar (CNH de Ouro)";
+                rankTitle.className = "font-orbitron text-2xl md:text-3xl font-black text-kyellow neon-text-pink";
+                rankDesc.textContent = "Excepcional! Você atingiu o status de ALL-KILL. Seu conhecimento em direção defensiva e normas de trânsito é digno de uma estrela internacional!";
+                
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+                }
+            } else if (percentage >= 70) {
+                rankIcon.textContent = "🌟";
+                rankTitle.textContent = "Lead Driver (Aprovado no Trainee)";
+                rankTitle.className = "font-orbitron text-2xl md:text-3xl font-black text-kcyan neon-text-cyan";
+                rankDesc.textContent = "Muito bem! Seu desempenho foi consistente e seguro. Você provou estar pronto para o exame da CNH!";
+            } else if (percentage >= 50) {
+                rankIcon.textContent = "🎧";
+                rankTitle.textContent = "Rookie Driver (Precisa de Ensaio)";
+                rankTitle.className = "font-orbitron text-2xl md:text-3xl font-black text-kpink";
+                rankDesc.textContent = "Aprovado por pouco! Revise o Guia de Estudos para lapidar seus pontos fracos e dominar o palco do trânsito.";
+            } else {
+                rankIcon.textContent = "⚠️";
+                rankTitle.textContent = "Trainee no Trânsito (Refaça o Teste)";
+                rankTitle.className = "font-orbitron text-2xl md:text-3xl font-black text-red-400";
+                rankDesc.textContent = "Sua pontuação ficou abaixo do necessário. Não desanime! Estude os conteúdos pedagógicos e refaça o quiz para garantir sua segurança.";
+            }
+
+            // Exibe estatísticas por categoria
+            const statsContainer = document.getElementById('category-stats-container');
+            statsContainer.innerHTML = '';
+
+            for (const [catName, catData] of Object.entries(categoryStats)) {
+                const catPercent = catData.total > 0 ? Math.round((catData.correct / catData.total) * 100) : 0;
+                
+                const statBox = document.createElement('div');
+                statBox.className = "bg-slate-900/80 p-3 rounded-xl border border-gray-800 space-y-1.5";
+                statBox.innerHTML = `
+                    <div class="flex justify-between items-center text-xs font-orbitron">
+                        <span class="font-bold text-gray-300">${catName}</span>
+                        <span class="text-kcyan font-bold">${catData.correct}/${catData.total} (${catPercent}%)</span>
+                    </div>
+                    <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden">
+                        <div class="bg-gradient-to-r from-kpink to-kcyan h-full rounded-full" style="width: ${catPercent}%"></div>
+                    </div>
+                `;
+                statsContainer.appendChild(statBox);
+            }
+
+            showScreen('results-screen');
+        }
+
+        // =========================================================================
+        // CARREGAMENTO INICIAL DA PÁGINA
+        // =========================================================================
+        window.onload = function() {
+            // Inicializa a aba de estudo padrão
+            switchStudyTab('defensiva');
+            // Mostra a tela inicial
+            showScreen('home-screen');
+        };
+    </script>
+</body>
+</html>
